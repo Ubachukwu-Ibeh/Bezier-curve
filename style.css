@@ -1,0 +1,16 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    touch-action: none;
+    background: #aaa;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+}
+
+body canvas {
+    margin: auto;
+}
