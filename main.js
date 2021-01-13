@@ -22,16 +22,12 @@ const getTouch = event => {
 
 let K, tx, ty, selected;
 
-window.addEventListener('touchstart', event => {
-  const [clientX, clientY] = getTouch(event);
-  tx = clientX;
-  ty = clientY;
-})
+window.addEventListener('touchstart', event => [tx, ty] = getTouch(event))
 window.addEventListener('touchmove', event => {
-  const [clientX, clientY] = getTouch(event);
+  [tx, ty] = getTouch(event);
   if (selected) {
-    selected.x = clientX - x;
-    selected.y = clientY - y;
+    selected.x = tx - x;
+    selected.y = ty - y;
   }
 })
 window.addEventListener('touchend', () => {
@@ -44,7 +40,7 @@ class Point {
     this.x = x;
     this.y = y;
   }
-  setPoint() {
+  checkIfTouched() {
     if (Math.abs(tx - (this.x + x)) <= 20 && Math.abs(ty - (this.y + y)) <= 20 && !selected) {
       selected = this;
     }
@@ -91,12 +87,12 @@ const render = () => {
   
   drawBlueLine(keyPointsArr[1], keyPointsArr[2]);
 
-  const fP = [];
+  const curvePoints = [];
   for (var i = 0; i < 1; i += 0.01) {
     K = i;
-    fP.push([producePoints(keyPointsArr, 'x'), producePoints(keyPointsArr, 'y')])
+    curvePoints.push([producePoints(keyPointsArr, 'x'), producePoints(keyPointsArr, 'y')])
   }
-  fP.forEach(point => {
+  curvePoints.forEach(point => {
     ctx.strokeStyle = 'orange';
     ctx.lineWidth = 1;
     drawCircle(point[0], point[1], 1);
