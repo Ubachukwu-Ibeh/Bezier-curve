@@ -6,22 +6,29 @@ const canvas = document.getElementById('canvas'),
   endAngle = 2 * Math.PI;
 canvas.width = w;
 canvas.height = h;
-const {x, y} = canvas.getBoundingClientRect();
 
-let tx, ty, selected;
-window.addEventListener('touchstart', event => {
+const {
+  x,
+  y
+} = canvas.getBoundingClientRect()
+
+const getTouch = event => {
   const [touch] = event.touches, {
     clientX,
     clientY
   } = touch;
+  return [clientX, clientY];
+};
+
+let K, tx, ty, selected;
+
+window.addEventListener('touchstart', event => {
+  const [clientX, clientY] = getTouch(event);
   tx = clientX;
   ty = clientY;
 })
 window.addEventListener('touchmove', event => {
-  [touch] = event.touches, {
-    clientX,
-    clientY
-  } = touch;
+  const [clientX, clientY] = getTouch(event);
   if (selected) {
     selected.x = clientX - x;
     selected.y = clientY - y;
@@ -31,6 +38,7 @@ window.addEventListener('touchend', () => {
   tx = undefined, ty = undefined;
   selected = undefined;
 })
+
 class Point {
   constructor(x, y) {
     this.x = x;
@@ -42,18 +50,19 @@ class Point {
     }
   }
 }
-const pointCoord = [
+const keyPoints = [
   [80, 250],
   [180, 150],
   [200, 350],
   [300, 240]
 ];
-const points = [];
+const keyPointsArr = [];
+
 for (var i = 0; i < 4; i++) {
-  points.push(new Point(pointCoord[i][0], pointCoord[i][1]))
+  keyPointsArr.push(new Point(keyPoints[i][0], keyPoints[i][1]))
 }
-let t;
-const producePoints = (arr, axis) => (Math.pow(1 - t, 3) * arr[0][axis]) + ((3 * Math.pow(1 - t, 2)) * (t * arr[1][axis])) + (3 * (1 - t) * (Math.pow(t, 2)) * arr[2][axis]) + (Math.pow(t, 3) * arr[3][axis]);
+
+const producePoints = (arr, axis) => (Math.pow(1 - K, 3) * arr[0][axis]) + ((3 * Math.pow(1 - K, 2)) * (K * arr[1][axis])) + (3 * (1 - K) * (Math.pow(K, 2)) * arr[2][axis]) + (Math.pow(K, 3) * arr[3][axis]);
 
 const drawCircle = (x, y, r) => {
   ctx.beginPath();
@@ -73,17 +82,19 @@ const render = () => {
   ctx.fillStyle = color;
   ctx.fillRect(0, 0, w, h);
 
-  points.forEach((point, index) => {
+  keyPointsArr.forEach((point, index) => {
     index === 0 || index === 3 ? ctx.strokeStyle = 'pink' : ctx.strokeStyle = 'purple';
     ctx.lineWidth = 10;
     drawCircle(point.x, point.y, 5);
     point.setPoint();
   });
-  drawBlueLine(points[1], points[2]);
+  
+  drawBlueLine(keyPointsArr[1], keyPointsArr[2]);
+
   const fP = [];
   for (var i = 0; i < 1; i += 0.01) {
-    t = i;
-    fP.push([producePoints(points, 'x'), producePoints(points, 'y')])
+    K = i;
+    fP.push([producePoints(keyPointsArr, 'x'), producePoints(keyPointsArr, 'y')])
   }
   fP.forEach(point => {
     ctx.strokeStyle = 'orange';
