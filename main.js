@@ -79,7 +79,7 @@ const render = () => {
   ctx.fillRect(0, 0, w, h);
 
   keyPointsArr.forEach((point, index) => {
-    index === 0 || index === 3 ? ctx.strokeStyle = 'pink' : ctx.strokeStyle = 'purple';
+    ctx.strokeStyle = index === 0 || index === 3 ? 'pink' : 'purple';
     ctx.lineWidth = 10;
     drawCircle(point.x, point.y, 5);
     point.setPoint();
