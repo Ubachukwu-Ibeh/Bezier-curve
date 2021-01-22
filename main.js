@@ -82,7 +82,7 @@ const render = () => {
     ctx.strokeStyle = index === 0 || index === 3 ? 'pink' : 'purple';
     ctx.lineWidth = 10;
     drawCircle(point.x, point.y, 5);
-    point.setPoint();
+    point.checkIfTouched();
   });
   
   drawBlueLine(keyPointsArr[1], keyPointsArr[2]);
